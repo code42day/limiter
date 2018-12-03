@@ -1,15 +1,13 @@
-
 module.exports = limiter;
 
 /*global setTimeout, clearTimeout */
 
-function limiter(interval, penaltyInterval) {
-
-  var queue = [],
-    lastTrigger = 0,
-    penaltyCounter = 0,
-    skipCounter = 0,
-    timer;
+function limiter(interval, penaltyInterval = 5 * interval) {
+  let queue = [];
+  let lastTrigger = 0;
+  let penaltyCounter = 0;
+  let skipCounter = 0;
+  let timer;
 
   function now() {
     return Date.now();
@@ -45,9 +43,8 @@ function limiter(interval, penaltyInterval) {
   }
 
   function schedule() {
-    var delay;
     if (!timer && queue.length) {
-      delay = currentInterval() - since();
+      const delay = currentInterval() - since();
       if (delay < 0) {
         return deque();
       }
@@ -79,11 +76,10 @@ function limiter(interval, penaltyInterval) {
     queue = [];
   }
 
-  penaltyInterval = penaltyInterval || 5 * interval;
   return {
-    trigger: trigger,
-    penalty: penalty,
-    skip: skip,
-    cancel: cancel
+    trigger,
+    penalty,
+    skip,
+    cancel
   };
 }
